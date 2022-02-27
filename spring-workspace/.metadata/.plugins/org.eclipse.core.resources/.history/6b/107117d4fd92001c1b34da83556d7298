@@ -1,0 +1,94 @@
+package com.trg.boot.controller;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.websocket.server.PathParam;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.trg.boot.model.Employee;
+
+@Controller
+@RequestMapping("employees")
+public class EmployeeController {
+	
+	static Map<Integer, Employee> data;
+
+	static {
+		data = new HashMap<Integer, Employee>();
+
+		data.put(100, new Employee(100, "Abhishek", 23000));
+		data.put(200, new Employee(200, "Birbal", 34000));
+		data.put(300, new Employee(300, "Charlie", 13000));
+		data.put(400, new Employee(400, "Deepak", 14000));
+	}
+	
+	@RequestMapping("{eid}")
+	public ModelAndView getEmployee(@PathVariable("eid") int empid){
+		
+		Employee e = data.get(empid);
+		if(e != null) {
+			return new ModelAndView("empdetails","emp",e);
+		}
+		else {
+			return new ModelAndView("response","msg","Employee with id-"+empid+ " not found!!");
+		}
+		
+		
+	}
+	
+	@RequestMapping()
+	
+	public ModelAndView getAllEmployees() {
+		Collection<Employee> col = data.values();
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("emplist");
+		mv.addObject("emps",col);
+		mv.addObject("msg", "Success");
+		
+		return mv;
+	}
+	
+	@RequestMapping("delete/{eid}")
+	public ModelAndView deleteEmployee(@PathVariable("eid") int empid) {
+		
+		String response;
+		
+		if(data.containsKey(empid)) {
+			data.remove(empid);
+			response = "Employee with id-" + empid + " successfully deleted!!";
+			
+		}
+		else {
+			response = "Error: Employee with id-" + empid + " does not exist.";
+		}
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("response",response);
+		mv.setViewName("response");
+		
+		return mv;
+	}
+	
+	@RequestMapping("save")
+	public ModelAndView saveEmployee(@RequestParam("empid") int empid,@RequestParam("name") String name,@RequestParam("salary") float salary){
+		
+		String response;
+		if(data.containsKey(empid)) {
+			response = "Error: Employee with id-" + empid + " already exists.";
+		}
+		else {
+			data.put(empid, new Employee(empid,name,salary));
+			response = "Employee successfully created!!";
+		}
+		
+		ModelAndView mv = new ModelAndView("response","response",response);
+		return mv;
+	}
+}

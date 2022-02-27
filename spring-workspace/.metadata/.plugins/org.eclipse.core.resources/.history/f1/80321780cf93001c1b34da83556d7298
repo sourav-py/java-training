@@ -1,0 +1,5 @@
+package com.trg.boot.repo;
+
+public interface EmployeeRepository {
+
+}

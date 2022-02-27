@@ -1,0 +1,16 @@
+package com.trg.boot.model;
+
+public class AppResponse {
+	
+	private String responseCode;
+	private String message;
+	
+	public AppResponse(String responseCode, String message) {
+		super();
+		this.responseCode = responseCode;
+		this.message = message;
+	}
+	
+	
+
+}

@@ -1,0 +1,6 @@
+#Database details
+spring.datasource.url = jdbc:derby//localhost:1527/souravdb
+spring.datasource.driver-class-name = org.apache.derby.jdbc.clientDriver
+#spring.datasource.username=sourav
+#spring.datasource.password=abcd
+

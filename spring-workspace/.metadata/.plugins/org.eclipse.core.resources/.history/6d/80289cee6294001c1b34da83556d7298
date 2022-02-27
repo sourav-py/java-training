@@ -1,0 +1,13 @@
+spring:
+  datasource: 
+    url: jdbc:derby://localhost:1527/souravdb
+    driver-class-name: org.apache.derby.jdbc.ClientDriver
+    
+  jpa:
+    hibernate:
+      ddl-auto: update
+      
+employee:
+  id: 200
+  name: Raman
+  salary: 5000

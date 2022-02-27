@@ -1,0 +1,135 @@
+package com.trg.boot.controller;
+
+import java.sql.Date;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.trg.boot.model.AppResponse;
+import com.trg.boot.model.Employee;
+import com.trg.boot.model.Student;
+
+@RestController
+@RequestMapping("students")
+public class StudentController {
+
+	static Map<Integer,Student> data;
+	
+	static {
+		data = new TreeMap<Integer,Student>();
+		data.put(101, new Student(101, "Abhishek", 75f, Date.valueOf("01/01/2000")));
+		data.put(102, new Student(102, "Birbal",75f, Date.valueOf("01/01/2000")));
+		data.put(103, new Student(103, "Charlie",75f,Date.valueOf("01/01/2000")));
+		data.put(104, new Student(104, "Deepak",75f, Date.valueOf("01/01/2000")));
+		
+	}
+	
+	@GetMapping()
+	public ResponseEntity<?> getAllStudents(){
+		
+		Collection<Student> col = data.values();
+		
+		if(col.isEmpty()) {
+			String response = "FETCHFAIL";
+			String message = "Student database is empty!";
+			return new ResponseEntity<AppResponse>(new AppResponse(response,message),HttpStatus.NOT_FOUND);
+		}
+		else{
+			return new ResponseEntity<Collection<Student>>(col,HttpStatus.OK);
+		}
+		
+	}
+	
+	
+	@GetMapping("{sid}")
+	public ResponseEntity<?> getStudent(@PathVariable("sid") int studentId){
+		
+		Student s = data.get(studentId);
+		
+		if(s == null) {
+			String response = "FETCHFAIL";
+			String message = "Student with id-" + studentId + " does not exist.";
+			return new ResponseEntity<AppResponse>(new AppResponse(response,message),HttpStatus.NOT_FOUND);
+		}
+		else {
+			return new ResponseEntity<Student>(s,HttpStatus.OK);
+		}
+		
+	}
+	
+	@PostMapping()
+	public ResponseEntity<?> saveStudent(@RequestBody Student s){
+		
+		if(data.containsKey(s.getId())) {
+			String response = "SAVEFAIL";
+			String message = "Student with id-" + s.getId() + " already exists.";
+			return new ResponseEntity<AppResponse>(new AppResponse(response,message),HttpStatus.BAD_REQUEST);
+		}
+		else
+		{
+			data.put(s.getId(),s);
+			String response = "SUCCESS";
+			String message = "Student successfully saved.";
+			return new ResponseEntity<AppResponse>(new AppResponse(response,message),HttpStatus.OK);
+		}
+	}
+	
+	
+	@PutMapping()
+	public ResponseEntity<?> updateStudent(@RequestBody Student s) {
+		
+		String message;
+		String responseCode;
+		
+		if(data.containsKey(s.getId())) {
+			
+			data.put(s.getId(), s);
+			responseCode = "SUCCESS";
+			message = "Student successfully updated!!!";
+			
+			return new ResponseEntity<AppResponse>(new AppResponse(responseCode,message),HttpStatus.OK);
+		}
+		else {
+			responseCode = "UPDATEFAIL";
+			message = "Error!! Employee with id-" + e.getEmpId() + " does not exists.";
+			
+			return new ResponseEntity<AppResponse>(new AppResponse(responseCode,message),HttpStatus.BAD_REQUEST);
+		}
+	}
+		
+	@DeleteMapping("{sid}")
+	public ResponseEntity<?> deleteEmployee(@PathVariable("sid") int studentId) {
+		
+		String message;
+		String responseCode;
+		
+		if(data.containsKey(studentId)) {
+			data.remove(studentId);
+			responseCode = "SUCCESS";
+			message = "Student with id-" + studentId + " successfully deleted.";
+			return new ResponseEntity<AppResponse>(new AppResponse(responseCode,message),HttpStatus.OK);
+		}
+		else {
+			responseCode = "DELETEFAIL";
+			message = "Error: Student with id-" + studentId + " does not exist.";
+			return new ResponseEntity<AppResponse>(new AppResponse(responseCode,message),HttpStatus.BAD_REQUEST);
+		}
+		
+		
+	}
+		
+	
+	
+}

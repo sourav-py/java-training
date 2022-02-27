@@ -1,0 +1,49 @@
+package com.trg.boot.controller;
+
+import java.sql.Date;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.trg.boot.model.AppResponse;
+import com.trg.boot.model.Student;
+
+@RestController
+@RequestMapping("students")
+public class StudentController {
+
+	static Map<Integer,Student> data;
+	
+	static {
+		data = new TreeMap<Integer,Student>();
+		data.put(101, new Student(101, "Abhishek", 75f, Date.valueOf("01/01/2000")));
+		data.put(102, new Student(102, "Birbal",75f, Date.valueOf("01/01/2000")));
+		data.put(103, new Student(103, "Charlie",75f,Date.valueOf("01/01/2000")));
+		data.put(104, new Student(104, "Deepak",75f, Date.valueOf("01/01/2000")));
+		
+	}
+	
+	@GetMapping()
+	public ResponseEntity<?> getAllStudents(){
+		
+		Collection<Student> col = data.values();
+		
+		if(col.isEmpty()) {
+			String response = "FETCHFAIL";
+			String message = "Student database is empty!";
+			return new ResponseEntity<AppResponse>(new AppResponse(respose,message),HttpStatus.NOT_FOUND);
+		}
+		else{
+			return new ResponseEntity<Collection>(col,HttpStatus.OK);
+		}
+		
+	}
+	
+	
+}

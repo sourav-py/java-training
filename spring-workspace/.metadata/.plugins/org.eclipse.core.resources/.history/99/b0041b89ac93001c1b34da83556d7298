@@ -1,0 +1,5 @@
+package com.trg.boot.model;
+
+public class Student {
+
+}

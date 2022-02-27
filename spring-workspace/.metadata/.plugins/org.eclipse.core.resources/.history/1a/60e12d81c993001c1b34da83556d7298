@@ -1,0 +1,5 @@
+package com.trg.boot.entity;
+
+public class Employee {
+
+}

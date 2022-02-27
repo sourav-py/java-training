@@ -1,0 +1,66 @@
+package com.trg.boot.controller;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.trg.boot.model.Book;
+import com.trg.boot.model.Author;
+import com.trg.boot.model.Employee;
+
+@RestController
+@RequestMapping("books")
+public class BookController {
+
+	static Map<Integer, Book> bookData;
+	
+	
+	
+	static {
+		Author auth = new Author(101,"Arthur","New Delhi");
+		Author auth = new Author(102,"Arushi","Mumbai");
+		
+		
+		bookData = new HashMap<Integer, Book>();
+
+		bookData.put(100, new Book(100, "Abhishek", auth));
+		bookData.put(200, new Book(200, "Birbal", auth));
+		bookData.put(300, new Book(300, "Charlie", auth));
+		bookData.put(400, new Book(400, "Deepak", auth));
+	}
+	
+	@RequestMapping("{eid}")
+	public Employee getEmployee(@PathVariable("eid") int empid){
+		
+		Employee e = bookData.get(empid);
+		
+		return e;
+		
+	}
+	
+	@RequestMapping()
+	public Collection<Employee> getAllEmployees() {
+		Collection<Employee> col = bookData.values();
+		
+		return col;
+	}
+	
+	@RequestMapping("delete/{eid}")
+	public String deleteEmployee(@PathVariable("eid") int empid) {
+		
+		if(bookData.containsKey(empid)) {
+			bookData.remove(empid);
+			return "Employee with id-" + empid + " successfully deleted.";
+		}
+		else {
+			return "Error: Employee with id-" + empid + " does not exist.";
+		}
+	}
+	
+	
+	
+}
